@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { assets } from '../../assets/assets';
 import { Link, useLocation } from 'react-router-dom';
 import { AppContext } from '../../context/AppContext';
@@ -18,15 +18,17 @@ const Navbar = () => {
   const { user } = useUser()
 
   const becomeEducator = async () => {
-
+     console.log("hii")
     try {
-
+console.log("inside try...");
+console.log("isEducator:", isEducator);
       if (isEducator) {
         navigate('/educator')
         return;
       }
 
-      const token = await getToken()
+      const token = await getToken();
+      console.log("token:", token);
       const { data } = await axios.get(backendUrl + '/api/educator/update-role', { headers: { Authorization: `Bearer ${token}` } })
       if (data.success) {
         toast.success(data.message)

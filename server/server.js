@@ -9,28 +9,25 @@ import { clerkWebhooks, stripeWebhooks } from './controllers/webhooks.js'
 import educatorRouter from './routes/educatorRoutes.js'
 import courseRouter from './routes/courseRoute.js'
 
-// Initialize Express
 const app = express()
 
-// Connect to database
 await connectDB()
 await connectCloudinary()
 
-// Middlewares
+// Middleware (CORRECT ORDER)
 app.use(cors())
-app.use(clerkMiddleware())
+app.use(express.json())     // <-- JSON FIRST
+app.use(clerkMiddleware())  // <-- CLERK AFTER JSON
 
 // Routes
 app.get('/', (req, res) => res.send("API Working"))
-app.post('/clerk', express.json() , clerkWebhooks)
+app.post('/clerk', clerkWebhooks)
 app.post('/stripe', express.raw({ type: 'application/json' }), stripeWebhooks)
-app.use('/api/educator', express.json(), educatorRouter)
-app.use('/api/course', express.json(), courseRouter)
-app.use('/api/user', express.json(), userRouter)
 
-// Port
+app.use('/api/educator', educatorRouter)
+app.use('/api/course', courseRouter)
+app.use('/api/user', userRouter)
+
 const PORT = process.env.PORT || 5000
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-})
+app.listen(PORT, () => console.log(`Server running on ${PORT}`))
