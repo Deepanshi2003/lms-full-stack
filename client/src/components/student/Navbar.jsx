@@ -29,7 +29,9 @@ console.log("isEducator:", isEducator);
 
       const token = await getToken();
       console.log("token:", token);
+      console.log(backendUrl,"backenditl")
       const { data } = await axios.get(backendUrl + '/api/educator/update-role', { headers: { Authorization: `Bearer ${token}` } })
+      console.log(data,"Dataa")
       if (data.success) {
         toast.success(data.message)
         setIsEducator(true)
